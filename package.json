@@ -1,0 +1,24 @@
+{
+  "name": "canvas2img",
+  "version": "1.0.0",
+  "description": "a  npm module to trans img url to base64 code with canvas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "chenhuashang",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shangga/canvas2img.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shangga/canvas2img/issues"
+  },
+  "homepage": "https://github.com/shangga/canvas2img#readme"
+}
