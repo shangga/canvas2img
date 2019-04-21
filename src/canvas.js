@@ -2,54 +2,65 @@
  * @file canvas
  * @description file contain canvas main function
  * @author chenhuashang
- * 
+ *
  */
 // canvas 默认值
-let width = 200;
-let height = 200;
+const {
+    createCanvas,
+    loadImage
+} = require('canvas');
 
-function generateCanvas(imgsrc, width, height, fillstr, textPosX, textPosY, quality) {
-    var img = new Image();
-    img.crossOrigin = 'anonymous';
-    var canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    var ctx = canvas.getContext('2d');
-    var url = 'http://a.hiphotos.baidu.com/image/pic/item/48540923dd54564eda5e9c4abdde9c82d1584f8d.jpg';
-    img.src = url;
-
-    success() => {
-        return new Promise((resolve, reject) => {
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, 200, 200);
-                _fillText(ctx, 'chenhuashang', 100, 100)
-                resolve(canvas.toDataURL('image/jpeg', 0.6))
-            };
-        })
+async function canvasToBase(imgUrl, width, height, text, textX, textY, textOpt) {
+    let _imgUrl = imgUrl || 'http://a.hiphotos.baidu.com/image/pic/item/48540923dd54564eda5e9c4abdde9c82d1584f8d.jpg';
+    let _width = width || 200;
+    let _height = height || 200;
+    let _text = text || 'canvas2img';
+    let _textx = textX || _width / 2;
+    let _textY = textY || 10;
+    // 定义文字基本设置
+    let _basicTextOpt = {
+        font: '30px serif',
+        textAlign: 'center',
+        textBaseline: 'center',
+        fillStyle: '#000FFF'
     }
-    return await success();
+    let _textOpt = Object.assign({}, _basicTextOpt, textOpt);
+    let canvas = _initCanvas(_width, _height);
+    
+    let base64Data = await generaBase64(canvas, _imgUrl, _width, _height, text, textX, textY, _textOpt);
+    console.log(base64Data);
+    return base64Data;
 }
-fucntion _setTextPosition(x, y) {
 
+// 初始化canvas
+function _initCanvas(Cwidth, Cheight) {
+    const canvas = createCanvas(Cwidth, Cwidth);
+    return canvas;
 }
 
 // 填充文本
-function _fillText(ctx, text, x, y) {
-    x = x ? x : width / 200;
-    y = y ? y : height / 200;
+function _fillText(ctx, width, height, text, x, y, option) {
+    x = x ? x : width / 2;
+    y = y ? y : height / 2;
     text = text || 'canvas2img';
-    ctx.font = '100px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#FF0000';
-    ctx.fillText(text, 100, 100);
+    ctx.font = option && option.font || '20px serif';
+    ctx.textAlign = option && option.textAlign || 'center';
+    ctx.textBaseline = option && option.textBaseline ||  'middle';
+    ctx.fillStyle = option && option.fillStyle || '#FF0000';
+    ctx = Object.assign(ctx, option);
+    ctx.fillText(text, x, y);
+}
+// 生成base64数据 
+function generaBase64(canvas, url, width, height, text, textX, textY, textOpt) {
+    let ctx = canvas.getContext('2d');
+    let _url = url || 'http://a.hiphotos.baidu.com/image/pic/item/48540923dd54564eda5e9c4abdde9c82d1584f8d.jpg'
+    return new Promise((resolve, reject) => {
+        loadImage(_url).then(image => {
+            ctx.drawImage(image, 0, 0, 200, 200);
+            _fillText(ctx, width, height, text, textX, textY, textOpt);
+            resolve(canvas.toDataURL());
+        });
+    });
 }
 
-// 判断图片url地址是否合法
-function _checkImg(src) {
-    return /http.+/.test(src);
-}
-
-function getlog() {
-    console.log(`dara`)
-}
+exports = module.exports = canvasToBase;
