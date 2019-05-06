@@ -17,3 +17,10 @@ async function getImg() {
 ```
 ### 参数
 
+- imgUrl: 图片地址
+- width: 图片宽度
+- height: 图片高度
+- text: 显示文本
+- textX: 文本X轴位置
+- textY: 文本Y轴位置
+- textOpt: 文本设置选项
